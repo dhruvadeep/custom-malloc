@@ -7,8 +7,23 @@
 
 // Define the capacity of the heap
 #define CAPACITY 1000
+#define HEAP_ALLOCED_MAX 100
+
+// Define the block structure
+// Type of fragment in the heap
+typedef struct
+{
+    void *start; // start of the block
+    size_t size; // size of the block
+    bool is_free; // is the block free?
+} block_t;
+
 
 char heap[CAPACITY] = {0}; // The heap
+
+// Keeping track of the blocks
+block_t heap_allocations[HEAP_ALLOCED_MAX] = {0}; // [
+size_t heap_allocations_count = 0; // number of blocks allocated
 
 // simple linear allocator
 size_t heap_size = 0; // The current size of the heap
@@ -21,6 +36,21 @@ void *heap_alloc(size_t size) // returns a pointer
     assert(heap_size + size <= CAPACITY); // check if heap has enough space
     void *result = heap_size + heap; // pointer to the block
     heap_size += size; // update the heap size
+    
+    
+    // Metadata for the block
+    block_t chunk = {
+        .start = result,
+        .size = size,
+        .is_free = false
+    };
+
+    assert(heap_allocations_count <= HEAP_ALLOCED_MAX); // check if heap_allocations has enough space
+    // Add the block to the heap_allocations
+    // Currently how many blocks are allocated + 1
+    heap_allocations[heap_allocations_count++] = chunk;
+    
+    
     return result;
 
 }
@@ -56,6 +86,8 @@ int main()
     {
         root[i] = 'A' + i; // store the alphabet A,B,...
     }
+
+    heap_free(root); // free the memory block
 
     return  0;
 }
