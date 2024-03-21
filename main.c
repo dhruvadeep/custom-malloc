@@ -29,6 +29,7 @@ void *heap_alloc(size_t size) // returns a pointer
 // Deallocates the space previously allocated by heap_alloc
 void heap_free(void *ptr) // takes a pointer
 {
+    (void) ptr; // suppress unused parameter warning 
     assert(false && "Not implemented yet");
 }
 
@@ -48,7 +49,15 @@ void heap_collect()
 // MAIN FUNCTION
 int main()
 {
-    void *root = heap_alloc(10); // allocate 10 bytes
+    char *root = heap_alloc(26); // allocate 26 bytes
+
+    // Iterate over the heap and print the contents
+    for (int i = 0; i < 26; i++)
+    {
+        root[i] = 'A' + i; // store the alphabet A,B,...
+    }
+
+    return  0;
 }
 
 
