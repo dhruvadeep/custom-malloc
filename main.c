@@ -55,6 +55,23 @@ void *heap_alloc(size_t size) // returns a pointer
 
 }
 
+// Dump the heap with the block metadata
+void heap_dump_alloced_chunks(void) 
+{
+    for (size_t i = 0; i < heap_allocations_count; i++)
+    {
+        printf(" start: %p, size: %zu, is_free: %s\n",
+               heap_allocations[i].start,
+               heap_allocations[i].size,
+               heap_allocations[i].is_free ? "true" : "false");
+    }
+    
+}
+
+
+
+
+
 // heap_free: free the memory block pointed to by ptr
 // Deallocates the space previously allocated by heap_alloc
 void heap_free(void *ptr) // takes a pointer
@@ -87,7 +104,8 @@ int main()
         root[i] = 'A' + i; // store the alphabet A,B,...
     }
 
-    heap_free(root); // free the memory block
+    heap_dump_alloced_chunks(); // dump the heap
+    // heap_free(root); // free the memory block
 
     return  0;
 }
