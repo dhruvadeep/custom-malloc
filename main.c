@@ -10,6 +10,7 @@
 // Define the capacity of the heap
 #define CAPACITY 1000
 #define HEAP_ALLOCED_MAX 100
+#define HEAP_FREED_MAX 100
 
 // Define the block structure
 // Type of fragment in the heap
@@ -20,15 +21,63 @@ typedef struct
     bool is_free; // is the block free?
 } block_t;
 
+// Heap_Chunk_list
+typedef struct {
+    size_t count; // number of blocks
+    block_t chunks[HEAP_ALLOCED_MAX]; // array of blocks
+} block_list_t;
 
+
+// ALL WAYS TO ACCESS THE HEAP
+// Dump the block
+void block_dump(const block_list_t *block) 
+{
+    printf("Blocks (%zu):\n", block->count);
+    for (size_t i = 0; i < block->count; i++)
+    {
+        printf(" start: %p, size: %zu, is_free: %s\n",
+               block->chunks[i].start,
+               block->chunks[i].size,
+               block->chunks[i].is_free ? "true" : "false");
+    
+    }
+}
+
+
+// Finding the free blocks
+int block_list_find(void *ptr, const block_list_t *list) 
+{
+    assert(false && "Not implemented yet");
+    return -1;
+}
+
+// Chunk to be removed
+void block_list_remove(size_t index, block_list_t *list) 
+{
+    assert(false && "Not implemented yet");
+}
+
+// Add a chunk to the list (insert)
+void block_list_add(block_list_t *list, void *ptr, size_t size) 
+{
+    assert(false && "Not implemented yet");
+}
+
+
+// Define the heap
 char heap[CAPACITY] = {0}; // The heap
-
-// Keeping track of the blocks
-block_t heap_allocations[HEAP_ALLOCED_MAX] = {0}; // [
-size_t heap_allocations_count = 0; // number of blocks allocated
-
 // simple linear allocator
 size_t heap_size = 0; // The current size of the heap
+
+
+// Define the heap allocations
+block_list_t heap_allocations_list = {0};
+block_list_t heap_freed_list = {0};
+// OLD
+// Keeping track of the blocks
+// block_t heap_allocations[HEAP_ALLOCED_MAX] = {0}; // [
+// size_t heap_allocations_count = 0; // number of blocks allocated
+
 
 
 // heap_alloc: allocate a block of memory of size bytes
@@ -42,18 +91,24 @@ void *heap_alloc(size_t size) // returns a pointer
         void *result = heap_size + heap; // pointer to the block
         heap_size += size; // update the heap size
         
-        
-        // Metadata for the block
-        block_t chunk = {
-            .start = result,
-            .size = size,
-            .is_free = false
-        };
 
-        assert(heap_allocations_count <= HEAP_ALLOCED_MAX); // check if heap_allocations has enough space
-        // Add the block to the heap_allocations
-        // Currently how many blocks are allocated + 1
-        heap_allocations[heap_allocations_count++] = chunk;
+
+        // new
+        block_list_add(&heap_allocations_list, result, size);
+
+
+        // OLD 
+        // // Metadata for the block
+        // block_t chunk = {
+        //     .start = result,
+        //     .size = size,
+        //     .is_free = false
+        // };
+
+        // assert(heap_allocations_count <= HEAP_ALLOCED_MAX); // check if heap_allocations has enough space
+        // // Add the block to the heap_allocations
+        // // Currently how many blocks are allocated + 1
+        // heap_allocations[heap_allocations_count++] = chunk;
         
         
         return result;
@@ -83,18 +138,8 @@ void heap_dump_alloced_chunks(void)
 // Deallocates the space previously allocated by heap_alloc
 void heap_free(void *ptr) // takes a pointer
 {
-    // To know we can iterate over the heap_allocations
-    for (size_t i = 0; i < heap_allocations_count; i++)
-    {
-        if (heap_allocations[i].start == ptr)
-        {
-            heap_allocations[i].is_free = true;
-            return;
-        }
-    }
-    
-    // (void) ptr; // suppress unused parameter warning 
-    // assert(false && "Not implemented yet");
+    (void) ptr; // suppress unused parameter warning 
+    assert(false && "Not implemented yet");
 }
 
 // Garbage collection
