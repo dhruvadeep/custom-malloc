@@ -96,6 +96,13 @@ void heap_collect()
 // MAIN FUNCTION
 int main()
 {
+    // Test
+    for (int i = 0; i < 10; i++)
+    {
+        heap_alloc(i);
+    }
+
+
     char *root = heap_alloc(26); // allocate 26 bytes
 
     // Iterate over the heap and print the contents
