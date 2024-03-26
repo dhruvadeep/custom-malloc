@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
 
 // Define the capacity of the heap
 #define CAPACITY 1000
@@ -33,26 +35,31 @@ size_t heap_size = 0; // The current size of the heap
 // Allocates a block of size bytes from the heap and returns a pointer to the block
 void *heap_alloc(size_t size) // returns a pointer 
 {
-    assert(heap_size + size <= CAPACITY); // check if heap has enough space
-    void *result = heap_size + heap; // pointer to the block
-    heap_size += size; // update the heap size
-    
-    
-    // Metadata for the block
-    block_t chunk = {
-        .start = result,
-        .size = size,
-        .is_free = false
-    };
+    // uniqueness
+    if (size > 0)
+    {  
+        assert(heap_size + size <= CAPACITY); // check if heap has enough space
+        void *result = heap_size + heap; // pointer to the block
+        heap_size += size; // update the heap size
+        
+        
+        // Metadata for the block
+        block_t chunk = {
+            .start = result,
+            .size = size,
+            .is_free = false
+        };
 
-    assert(heap_allocations_count <= HEAP_ALLOCED_MAX); // check if heap_allocations has enough space
-    // Add the block to the heap_allocations
-    // Currently how many blocks are allocated + 1
-    heap_allocations[heap_allocations_count++] = chunk;
-    
-    
-    return result;
-
+        assert(heap_allocations_count <= HEAP_ALLOCED_MAX); // check if heap_allocations has enough space
+        // Add the block to the heap_allocations
+        // Currently how many blocks are allocated + 1
+        heap_allocations[heap_allocations_count++] = chunk;
+        
+        
+        return result;
+    } else {
+        return NULL;
+    }
 }
 
 // Dump the heap with the block metadata
