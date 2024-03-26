@@ -83,8 +83,18 @@ void heap_dump_alloced_chunks(void)
 // Deallocates the space previously allocated by heap_alloc
 void heap_free(void *ptr) // takes a pointer
 {
-    (void) ptr; // suppress unused parameter warning 
-    assert(false && "Not implemented yet");
+    // To know we can iterate over the heap_allocations
+    for (size_t i = 0; i < heap_allocations_count; i++)
+    {
+        if (heap_allocations[i].start == ptr)
+        {
+            heap_allocations[i].is_free = true;
+            return;
+        }
+    }
+    
+    // (void) ptr; // suppress unused parameter warning 
+    // assert(false && "Not implemented yet");
 }
 
 // Garbage collection
@@ -104,19 +114,24 @@ void heap_collect()
 int main()
 {
     // Test
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
-        heap_alloc(i);
+        void *p = heap_alloc(i);
+        // every even number is freed
+        if (i % 2 == 0)
+        {
+            heap_free(p);
+        }
     }
 
 
-    char *root = heap_alloc(26); // allocate 26 bytes
+    // char *root = heap_alloc(26); // allocate 26 bytes
 
-    // Iterate over the heap and print the contents
-    for (int i = 0; i < 26; i++)
-    {
-        root[i] = 'A' + i; // store the alphabet A,B,...
-    }
+    // // Iterate over the heap and print the contents
+    // for (int i = 0; i < 26; i++)
+    // {
+    //     root[i] = 'A' + i; // store the alphabet A,B,...
+    // }
 
     heap_dump_alloced_chunks(); // dump the heap
     // heap_free(root); // free the memory block
