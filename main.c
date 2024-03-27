@@ -8,7 +8,7 @@
 
 
 // Define the capacity of the heap
-#define CAPACITY 1000
+#define CAPACITY 64000
 #define HEAP_ALLOCED_MAX 100
 #define HEAP_FREED_MAX 100
 
@@ -26,6 +26,13 @@ typedef struct {
     size_t count; // number of blocks
     block_t chunks[HEAP_ALLOCED_MAX]; // array of blocks
 } block_list_t;
+
+//Todo
+void todo(const char *message)
+{
+    fprintf(stderr, "TODO: %s\n", message);
+    exit(1);
+}
 
 
 // ALL WAYS TO ACCESS THE HEAP
@@ -47,20 +54,31 @@ void block_dump(const block_list_t *block)
 // Finding the free blocks
 int block_list_find(void *ptr, const block_list_t *list) 
 {
-    assert(false && "Not implemented yet");
+    (void) ptr; // suppress unused parameter warning
+    (void) list; // suppress unused parameter warning
+    // assert(false && "Not implemented yet");
+    todo("block_list_find");
     return -1;
 }
 
 // Chunk to be removed
 void block_list_remove(size_t index, block_list_t *list) 
 {
-    assert(false && "Not implemented yet");
+    (void) index; // suppress unused parameter warning
+    (void) list; // suppress unused parameter warning
+
+    // assert(false && "Not implemented yet");
+    todo("block_list_remove");
 }
 
 // Add a chunk to the list (insert)
 void block_list_add(block_list_t *list, void *ptr, size_t size) 
 {
-    assert(false && "Not implemented yet");
+    (void) size; // suppress unused parameter warning
+    (void) ptr; // suppress unused parameter warning
+    (void) list; // suppress unused parameter warning
+    // assert(false && "Not implemented yet");
+    // todo("block_list_add");
 }
 
 
@@ -118,17 +136,17 @@ void *heap_alloc(size_t size) // returns a pointer
 }
 
 // Dump the heap with the block metadata
-void heap_dump_alloced_chunks(void) 
-{
-    for (size_t i = 0; i < heap_allocations_count; i++)
-    {
-        printf(" start: %p, size: %zu, is_free: %s\n",
-               heap_allocations[i].start,
-               heap_allocations[i].size,
-               heap_allocations[i].is_free ? "true" : "false");
-    }
+// void heap_dump_alloced_chunks(void) 
+// {
+//     for (size_t i = 0; i < heap_allocations_count; i++)
+//     {
+//         printf(" start: %p, size: %zu, is_free: %s\n",
+//                heap_allocations[i].start,
+//                heap_allocations[i].size,
+//                heap_allocations[i].is_free ? "true" : "false");
+//     }
     
-}
+// }
 
 
 
@@ -139,12 +157,12 @@ void heap_dump_alloced_chunks(void)
 void heap_free(void *ptr) // takes a pointer
 {
     (void) ptr; // suppress unused parameter warning 
-    assert(false && "Not implemented yet");
+    // assert(false && "Not implemented yet");
+    todo("heap_free");
 }
 
 // Garbage collection
 void heap_collect()
-
 {
     assert(false && "Not implemented yet");
 }
@@ -163,10 +181,12 @@ int main()
     {
         void *p = heap_alloc(i);
         // every even number is freed
-        if (i % 2 == 0)
-        {
-            heap_free(p);
-        }
+        // if (i % 2 == 0)
+        // {
+        //     heap_free(p);
+        // }
+        printf("Allocated %d bytes at %p\n", i, p);
+        // (void) p;
     }
 
 
@@ -178,7 +198,7 @@ int main()
     //     root[i] = 'A' + i; // store the alphabet A,B,...
     // }
 
-    heap_dump_alloced_chunks(); // dump the heap
+    // heap_dump_alloced_chunks(); // dump the heap
     // heap_free(root); // free the memory block
 
     return  0;
