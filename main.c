@@ -54,11 +54,25 @@ void block_dump(const block_list_t *block)
 // Finding the free blocks
 int block_list_find(void *ptr, const block_list_t *list) 
 {
-    (void) ptr; // suppress unused parameter warning
-    (void) list; // suppress unused parameter warning
-    // assert(false && "Not implemented yet");
-    todo("block_list_find");
-    return -1;
+    block_t key = {
+        .start = ptr,
+        .size = 0,
+        .is_free = false
+    };
+
+    void *bsearch(
+        const void *key,
+        const void *base,
+        size_t nmemb,
+        size_t size,
+        int (*compar)(const void *, const void *)
+    );
+
+    // (void) ptr; // suppress unused parameter warning
+    // (void) list; // suppress unused parameter warning
+    // // assert(false && "Not implemented yet");
+    // todo("block_list_find");
+    // return -1;
 }
 
 // Chunk to be removed
@@ -180,9 +194,29 @@ void *heap_alloc(size_t size) // returns a pointer
 // Deallocates the space previously allocated by heap_alloc
 void heap_free(void *ptr) // takes a pointer
 {
+    const int index = block_list_find(ptr, &heap_allocations_list);     
+    if (index < 0)
+    {
+        assert(false && "Invalid pointer");
+    }
+
+    // Remove the block from the heap_allocations
+    // add it to the heap_freed_list 
+    block_list_add(
+        &heap_freed_list,
+        heap_allocations_list.chunks[index].start,
+        heap_allocations_list.chunks[index].size
+    );
+
+
+
+    // Remove the block from the heap_allocations
+    block_list_remove(index, &heap_allocations_list);
+
+
     (void) ptr; // suppress unused parameter warning 
     // assert(false && "Not implemented yet");
-    todo("heap_free");
+    // todo("heap_free");
 }
 
 // Garbage collection
