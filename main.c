@@ -9,8 +9,8 @@
 
 // Define the capacity of the heap
 #define CAPACITY 64000
-#define HEAP_ALLOCED_MAX 100
-#define HEAP_FREED_MAX 100
+#define HEAP_ALLOCED_MAX 1024
+#define HEAP_FREED_MAX 1024
 
 // Define the block structure
 // Type of fragment in the heap
@@ -74,6 +74,30 @@ void block_list_remove(size_t index, block_list_t *list)
 // Add a chunk to the list (insert)
 void block_list_add(block_list_t *list, void *ptr, size_t size) 
 {
+    // Check if the list has enough space
+    assert(list->count < HEAP_ALLOCED_MAX); // check if the list has enough space
+    
+    // add it to the end 
+    list->chunks[list->count].start = ptr;
+    list->chunks[list->count].size = size;
+
+    // sort the list
+    for (size_t i = list->count; i > 0; i--)
+    {
+        if (list->chunks[i].start < list->chunks[i - 1].start)
+        {
+            // swap
+            block_t temp = list->chunks[i];
+            list->chunks[i] = list->chunks[i - 1];
+            list->chunks[i - 1] = temp;
+        }
+    }
+
+
+    // increment the count
+    list->count++;
+
+
     (void) size; // suppress unused parameter warning
     (void) ptr; // suppress unused parameter warning
     (void) list; // suppress unused parameter warning
@@ -185,9 +209,11 @@ int main()
         // {
         //     heap_free(p);
         // }
-        printf("Allocated %d bytes at %p\n", i, p);
+        // printf("Allocated %d bytes at %p\n", i, p);
         // (void) p;
     }
+
+    block_dump(&heap_allocations_list);
 
 
     // char *root = heap_alloc(26); // allocate 26 bytes
